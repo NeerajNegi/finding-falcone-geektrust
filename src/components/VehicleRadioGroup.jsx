@@ -6,10 +6,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
-const VehicleRadioGroup = ({ vehicles, onVehicleUpdate }) => {
+const VehicleRadioGroup = ({ vehicles, maxDistance, onVehicleUpdate }) => {
 
     const shouldRadioBeDisabled = (vehicle) => {
-        if (!vehicle.total_no) {
+        if (!vehicle.total_no || vehicle.max_distance < maxDistance) {
             return true
         }
         return false;

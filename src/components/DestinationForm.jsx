@@ -28,6 +28,7 @@ const DestinationForm = ({id, planets, vehicles, onDestinationAndVehicleSelectio
                 destination && 
                 <VehicleRadioGroup 
                     vehicles={vehicles}
+                    maxDistance={destination.distance}
                     onVehicleUpdate={setDestinationAndVehicle}
                 />
             }

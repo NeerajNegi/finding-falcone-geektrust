@@ -3,6 +3,8 @@
   font-family: 'Montserrat', sans-serif;
 }
 
+/* Home styles start */
+
 .main-heading {
   text-align: center;
 }
@@ -14,6 +16,21 @@
   margin: 0 auto;
 }
 
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
+}
+
+.time-container {
+  text-align: center;
+}
+
+/* Home styles end */
+
+
+/* DestinationForm styles start  */
+
 .menu {
   margin-right: 2rem;
   width: 20vw;
@@ -24,8 +41,4 @@
   margin-bottom: 2rem;
 }
 
-.actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 4rem;
-}
+/* DestinationForm styles end  */

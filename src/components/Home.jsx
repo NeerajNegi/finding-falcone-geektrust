@@ -2,8 +2,10 @@ import React from 'react';
 import axios from '../api';
 
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import DestinationForm from './DestinationForm';
+// import ConfirmationDialog from './ConfirmationDialog';
 export default class Home extends React.Component {
 
     constructor() {
@@ -13,7 +15,9 @@ export default class Home extends React.Component {
             vehicles: [],
             planet_names: [],
             vehicle_names:[],
-            time_taken: 0
+            time_taken: 0,
+            showConfirmationDialog: false,
+            isLoading: false,
         }
     }
 
@@ -38,9 +42,9 @@ export default class Home extends React.Component {
     }
 
     handleVehiclesUpdate = (event) => {
-        const value = event.target.value;
+        const selectedVehicle = event.target.value;
         const updatedVehicles = this.state.vehicles.map(vehicle => {
-            if (vehicle.name === value) {
+            if (vehicle.name === selectedVehicle) {
                 --vehicle.total_no;
             }
             return vehicle;
@@ -50,15 +54,26 @@ export default class Home extends React.Component {
 
     handleDestinationAndVehicleSelection = (planet, vehicle) => {
         const { time_taken, planet_names, vehicle_names } = this.state;
-        const timeAddition = planet.distance / vehicle.speed;
+        const timeToAdd = planet.distance / vehicle.speed;
+        /* Handle case when there is already a vehicle assigned for the planet */
+        // if (planet_names.find(planetName => planetName === planet.name )) {
+            // const duplicatePlanetConfirmation = confirm(');
+            // if (duplicatePlanetConfirmation) {
+            //     planet_names.push(planet.name);
+            // }
+        // }
         planet_names.push(planet.name);
         vehicle_names.push(vehicle.name);
         this.setState({
-            time_taken: time_taken + timeAddition,
+            time_taken: time_taken + timeToAdd,
             planet_names,
             vehicle_names
         });
     }
+
+    // handleConfirmationDialogOnClose = (confirmation) => {
+    //     if ()
+    // }
 
     renderDropdowns = () => {
         const {vehicles, planets} = this.state;
@@ -73,7 +88,32 @@ export default class Home extends React.Component {
         );
     }
 
+    findFalcone = async () => {
+        this.setState({ isLoading: true });
+        const { planet_names, vehicle_names } = this.state
+        const tokenResponse = await axios.post('token');
+        const token = tokenResponse.data.token;
+
+        const findFalconeResponse = await axios.post('find', {
+            token,
+            planet_names,
+            vehicle_names
+        });
+
+        this.setState({ isLoading: false });
+        console.log(findFalconeResponse.data);
+
+        this.props.history.push({
+            pathname: '/result',
+            data: { 
+                response: findFalconeResponse.data,
+                timeTaken: this.state.time_taken,
+            }
+        });
+    }
+
     render() {
+        const {planet_names, time_taken, isLoading } = this.state;
         return(
             <div>
                 <h1 className="main-heading">Finding Falcon</h1>
@@ -81,8 +121,24 @@ export default class Home extends React.Component {
                     { this.renderDropdowns() }
                 </div>
                 <div className="actions">
-                    <Button variant="contained" color="primary">Find Falcone</Button>
+                    { !isLoading ? 
+                        <Button
+                        onClick={() => this.findFalcone()}
+                        variant="contained" 
+                        color="primary"
+                        disabled={planet_names.length < 4}>
+                            Find Falcone
+                        </Button> :
+                        <CircularProgress />
+                    }
                 </div>
+                {
+                    time_taken > 0 && 
+                    <div className="time-container">
+                        <h1>Time Taken</h1>
+                        <h2>{time_taken}</h2>
+                    </div>
+                }
             </div>
         )
     }
