@@ -8,6 +8,7 @@ import Result from './components/Result';
 function App() {
   return (
     <div className="App">
+      <h1 className="main-heading">Finding Falcone</h1>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/result" component={Result} />

@@ -116,7 +116,6 @@ export default class Home extends React.Component {
         const {planet_names, time_taken, isLoading } = this.state;
         return(
             <div>
-                <h1 className="main-heading">Finding Falcon</h1>
                 <div className="menu-container">
                     { this.renderDropdowns() }
                 </div>

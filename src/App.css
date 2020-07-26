@@ -42,3 +42,26 @@
 }
 
 /* DestinationForm styles end  */
+
+
+/* Result styles start */
+.image-container {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.message-container {
+  text-align: center;
+}
+
+.green {
+  background-color: #0BB631 !important;
+}
+
+.btn {
+  text-decoration: none;
+  color: white;
+}
+
+/* Result styles end */
