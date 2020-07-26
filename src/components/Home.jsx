@@ -133,7 +133,7 @@ export default class Home extends React.Component {
                     }
                 </div>
                 {
-                    time_taken > 0 && 
+                    !!time_taken && 
                     <div className="time-container">
                         <h1>Time Taken</h1>
                         <h2>{time_taken}</h2>
