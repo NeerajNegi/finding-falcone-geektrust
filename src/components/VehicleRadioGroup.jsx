@@ -5,17 +5,25 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const VehicleRadioGroup = ({ vehicles, maxDistance, onVehicleUpdate }) => {
 
+    const [selectedVehicle, setSelectedVehicle] = useState('');
+
     const shouldRadioBeDisabled = (vehicle) => {
+        if (selectedVehicle && selectedVehicle === vehicle.name) {
+            return false;
+        }
         if (!vehicle.total_no || vehicle.max_distance < maxDistance) {
             return true
         }
         return false;
     }
 
-    const setVehicle = (vehicleName) => {
+    const selectVehicle = (vehicleName) => {
+        setSelectedVehicle(vehicleName);
         const vehicle = vehicles.filter(veh => veh.name === vehicleName);
         onVehicleUpdate(...vehicle);
     }
@@ -26,7 +34,7 @@ const VehicleRadioGroup = ({ vehicles, maxDistance, onVehicleUpdate }) => {
             <RadioGroup 
                 aria-label="vehicles" 
                 name="vehicles" 
-                onChange={(e) => setVehicle(e.target.value)}>
+                onChange={(e) => selectVehicle(e.target.value)}>
                 { vehicles.map(vehicle => 
                     <FormControlLabel 
                         key={vehicle.name}

@@ -41,10 +41,9 @@ export default class Home extends React.Component {
             .catch(error => console.error(error));
     }
 
-    handleVehiclesUpdate = (event) => {
-        const selectedVehicle = event.target.value;
+    updateVehicles = (vehicleName) => {
         const updatedVehicles = this.state.vehicles.map(vehicle => {
-            if (vehicle.name === selectedVehicle) {
+            if (vehicle.name === vehicleName) {
                 --vehicle.total_no;
             }
             return vehicle;
@@ -68,7 +67,7 @@ export default class Home extends React.Component {
             time_taken: time_taken + timeToAdd,
             planet_names,
             vehicle_names
-        });
+        }, () => this.updateVehicles(vehicle.name));
     }
 
     // handleConfirmationDialogOnClose = (confirmation) => {

@@ -8,10 +8,6 @@ import { Link } from 'react-router-dom';
 
 const Result = ({ location }) => {
 
-    useEffect(() => {
-        console.log(location.data);
-    }, [location]);
-
     return (
         <div>
             <div className="image-container">
