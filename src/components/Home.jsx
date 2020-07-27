@@ -13,6 +13,7 @@ export default class Home extends React.Component {
         this.state = {
             planets: [],
             vehicles: [],
+            initalVehicles: [],
             planet_names: [],
             vehicle_names:[],
             time_taken: 0,
@@ -26,7 +27,7 @@ export default class Home extends React.Component {
         await this.getVehicles();
 
         console.log('Planets', this.state.planets);
-        console.log('Vehicles', this.state.vehicles);
+        console.log('Vehicles', this.state.initalVehicles);
     }
 
     getPlanets = () => {
@@ -37,17 +38,20 @@ export default class Home extends React.Component {
 
     getVehicles = () => {
         return axios.get('vehicles')
-            .then(data => this.setState({ vehicles: [ ...data.data ]}))
+            .then(data => this.setState({ vehicles: [ ...data.data ], initalVehicles: [ ...data.data]}))
             .catch(error => console.error(error));
     }
 
-    updateVehicles = (vehicleName) => {
-        const updatedVehicles = this.state.vehicles.map(vehicle => {
-            if (vehicle.name === vehicleName) {
-                --vehicle.total_no;
+    updateVehicles = () => {
+        const selectedVehicles = this.state.vehicle_names;
+        const updatedVehicles = [...this.state.initalVehicles].map(vehicle => {
+            if (selectedVehicles.indexOf(vehicle.name) >= 0) {
+                vehicle.total_no -= 1;
             }
             return vehicle;
         })
+        console.log('Updated Vehicles', updatedVehicles);
+        console.log('Vehicles', this.state.vehicle_names);
         this.setState({ vehicles: updatedVehicles });
     }
 
@@ -67,7 +71,7 @@ export default class Home extends React.Component {
             time_taken: time_taken + timeToAdd,
             planet_names,
             vehicle_names
-        }, () => this.updateVehicles(vehicle.name));
+        }, () => this.updateVehicles());
     }
 
     // handleConfirmationDialogOnClose = (confirmation) => {
