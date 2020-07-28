@@ -7,13 +7,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import DestinationForm from './DestinationForm';
 // import ConfirmationDialog from './ConfirmationDialog';
 export default class Home extends React.Component {
-
+    initalVehicles = [];
     constructor() {
         super();
         this.state = {
             planets: [],
             vehicles: [],
-            initalVehicles: [],
             planet_names: [],
             vehicle_names:[],
             time_taken: 0,
@@ -25,9 +24,10 @@ export default class Home extends React.Component {
     async componentDidMount() {
         await this.getPlanets();
         await this.getVehicles();
+        this.initalVehicles = this.state.vehicles.map(vehicle => Object.assign({}, vehicle));
 
         console.log('Planets', this.state.planets);
-        console.log('Vehicles', this.state.initalVehicles);
+        console.log('Vehicles', this.initalVehicles);
     }
 
     getPlanets = () => {
@@ -38,18 +38,17 @@ export default class Home extends React.Component {
 
     getVehicles = () => {
         return axios.get('vehicles')
-            .then(data => this.setState({ vehicles: [ ...data.data ], initalVehicles: [ ...data.data]}))
+            .then(data => this.setState({ vehicles: [ ...data.data ]}))
             .catch(error => console.error(error));
     }
 
     updateVehicles = () => {
         const selectedVehicles = this.state.vehicle_names;
-        const updatedVehicles = [...this.state.initalVehicles].map(vehicle => {
-            if (selectedVehicles.findIndex(veh => veh.name === vehicle.name) >= 0) {
-                vehicle.total_no -= 1;
-            }
-            return vehicle;
-        });
+        const updatedVehicles = this.initalVehicles.map(vehicle => Object.assign({}, vehicle));
+        selectedVehicles.forEach(vehicle => {
+            const vehicleToUpdate = updatedVehicles.find(veh => veh.name === vehicle.name);
+            !!vehicleToUpdate && vehicleToUpdate.total_no--;
+        })
         this.setState({ vehicles: updatedVehicles });
     }
 
@@ -57,14 +56,14 @@ export default class Home extends React.Component {
         const { time_taken, planet_names, vehicle_names } = this.state;
         const timeToAdd = planet.distance / vehicle.speed;
         const index = vehicle_names.findIndex(veh => veh.id === id);
-        console.log(index);
         index > 0 && vehicle_names.splice(index, 1);
+
         planet_names.push(planet.name);
         vehicle_names.push({
             id,
             name: vehicle.name
         });
-        console.log('VEHICLES', vehicle_names);
+
         this.setState({
             time_taken: time_taken + timeToAdd,
             planet_names,
@@ -87,26 +86,29 @@ export default class Home extends React.Component {
 
     findFalcone = async () => {
         this.setState({ isLoading: true });
-        const { planet_names, vehicle_names } = this.state
-        const tokenResponse = await axios.post('token');
-        const token = tokenResponse.data.token;
+        const { planet_names } = this.state
+        const vehicle_names = this.state.vehicle_names.map(veh => veh.name);
+        console.log(planet_names);
+        console.log(vehicle_names);
+        // const tokenResponse = await axios.post('token');
+        // const token = tokenResponse.data.token;
 
-        const findFalconeResponse = await axios.post('find', {
-            token,
-            planet_names,
-            vehicle_names
-        });
+        // const findFalconeResponse = await axios.post('find', {
+        //     token,
+        //     planet_names,
+        //     vehicle_names
+        // });
 
-        this.setState({ isLoading: false });
-        console.log(findFalconeResponse.data);
+        // this.setState({ isLoading: false });
+        // console.log(findFalconeResponse.data);
 
-        this.props.history.push({
-            pathname: '/result',
-            data: { 
-                response: findFalconeResponse.data,
-                timeTaken: this.state.time_taken,
-            }
-        });
+        // this.props.history.push({
+        //     pathname: '/result',
+        //     data: { 
+        //         response: findFalconeResponse.data,
+        //         timeTaken: this.state.time_taken,
+        //     }
+        // });
     }
 
     render() {

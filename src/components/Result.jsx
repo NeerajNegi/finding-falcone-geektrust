@@ -1,5 +1,4 @@
 import React from 'react';
-import { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 
 import successSvg from '../assets/success.svg';
