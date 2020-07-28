@@ -9,7 +9,7 @@ const DestinationForm = ({id, planets, vehicles, onDestinationAndVehicleSelectio
     const [destination, setDestination] = useState('');
 
     const setDestinationAndVehicle = (vehicle) => {
-        onDestinationAndVehicleSelection(destination, vehicle)
+        onDestinationAndVehicleSelection(destination, vehicle, id);
     }
 
     return (

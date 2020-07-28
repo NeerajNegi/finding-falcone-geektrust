@@ -45,38 +45,32 @@ export default class Home extends React.Component {
     updateVehicles = () => {
         const selectedVehicles = this.state.vehicle_names;
         const updatedVehicles = [...this.state.initalVehicles].map(vehicle => {
-            if (selectedVehicles.indexOf(vehicle.name) >= 0) {
+            if (selectedVehicles.findIndex(veh => veh.name === vehicle.name) >= 0) {
                 vehicle.total_no -= 1;
             }
             return vehicle;
-        })
-        console.log('Updated Vehicles', updatedVehicles);
-        console.log('Vehicles', this.state.vehicle_names);
+        });
         this.setState({ vehicles: updatedVehicles });
     }
 
-    handleDestinationAndVehicleSelection = (planet, vehicle) => {
+    handleDestinationAndVehicleSelection = (planet, vehicle, id) => {
         const { time_taken, planet_names, vehicle_names } = this.state;
         const timeToAdd = planet.distance / vehicle.speed;
-        /* Handle case when there is already a vehicle assigned for the planet */
-        // if (planet_names.find(planetName => planetName === planet.name )) {
-            // const duplicatePlanetConfirmation = confirm(');
-            // if (duplicatePlanetConfirmation) {
-            //     planet_names.push(planet.name);
-            // }
-        // }
+        const index = vehicle_names.findIndex(veh => veh.id === id);
+        console.log(index);
+        index > 0 && vehicle_names.splice(index, 1);
         planet_names.push(planet.name);
-        vehicle_names.push(vehicle.name);
+        vehicle_names.push({
+            id,
+            name: vehicle.name
+        });
+        console.log('VEHICLES', vehicle_names);
         this.setState({
             time_taken: time_taken + timeToAdd,
             planet_names,
             vehicle_names
         }, () => this.updateVehicles());
     }
-
-    // handleConfirmationDialogOnClose = (confirmation) => {
-    //     if ()
-    // }
 
     renderDropdowns = () => {
         const {vehicles, planets} = this.state;
