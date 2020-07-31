@@ -39,7 +39,7 @@ const VehicleRadioGroup = ({ vehicles, maxDistance, onVehicleUpdate }) => {
                         key={vehicle.name}
                         value={vehicle.name} 
                         control={<Radio />}
-                        label={vehicle.name}
+                        label={`${vehicle.name} (${vehicle.total_no})`}
                         disabled={shouldRadioBeDisabled(vehicle)} />
                     )
                 }

@@ -90,25 +90,25 @@ export default class Home extends React.Component {
         const vehicle_names = this.state.vehicle_names.map(veh => veh.name);
         console.log(planet_names);
         console.log(vehicle_names);
-        // const tokenResponse = await axios.post('token');
-        // const token = tokenResponse.data.token;
+        const tokenResponse = await axios.post('token');
+        const token = tokenResponse.data.token;
 
-        // const findFalconeResponse = await axios.post('find', {
-        //     token,
-        //     planet_names,
-        //     vehicle_names
-        // });
+        const findFalconeResponse = await axios.post('find', {
+            token,
+            planet_names,
+            vehicle_names
+        });
 
-        // this.setState({ isLoading: false });
-        // console.log(findFalconeResponse.data);
+        this.setState({ isLoading: false });
+        console.log(findFalconeResponse.data);
 
-        // this.props.history.push({
-        //     pathname: '/result',
-        //     data: { 
-        //         response: findFalconeResponse.data,
-        //         timeTaken: this.state.time_taken,
-        //     }
-        // });
+        this.props.history.push({
+            pathname: '/result',
+            data: { 
+                response: findFalconeResponse.data,
+                timeTaken: this.state.time_taken,
+            }
+        });
     }
 
     render() {
