@@ -4,12 +4,17 @@ import TextField from '@material-ui/core/TextField';
 
 import VehicleRadioGroup from './VehicleRadioGroup';
 
-const DestinationForm = ({id, planets, vehicles, onDestinationAndVehicleSelection}) => {
+const DestinationForm = ({id, planets, vehicles, onPlanetSelection, onVehicleSelection}) => {
 
     const [destination, setDestination] = useState('');
 
-    const setDestinationAndVehicle = (vehicle) => {
-        onDestinationAndVehicleSelection(destination, vehicle, id);
+    // const setDestinationAndVehicle = (vehicle) => {
+    //     // onDestinationAndVehicleSelection(destination, vehicle, id);
+    // }
+
+    const handleDestinationChange = (destination) => {
+        setDestination(destination);
+        onPlanetSelection(destination, id);
     }
 
     return (
@@ -19,7 +24,7 @@ const DestinationForm = ({id, planets, vehicles, onDestinationAndVehicleSelectio
                 className="dropdown"
                 id={`planets-${id}`}
                 value={destination}
-                onChange={(event, newValue) => setDestination(newValue)}
+                onChange={(event, newValue) => handleDestinationChange(newValue)}
                 options={planets}
                 getOptionLabel={option => option.name}
                 renderInput={params => <TextField {...params} label="planet" variant="outlined" />} 
@@ -29,7 +34,7 @@ const DestinationForm = ({id, planets, vehicles, onDestinationAndVehicleSelectio
                 <VehicleRadioGroup 
                     vehicles={vehicles}
                     maxDistance={destination.distance}
-                    onVehicleUpdate={setDestinationAndVehicle}
+                    onVehicleChange={(vehicle) => onVehicleSelection(vehicle, id)}
                 />
             }
         </div>

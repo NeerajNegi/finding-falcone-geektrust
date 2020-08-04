@@ -13,8 +13,7 @@ export default class Home extends React.Component {
         this.state = {
             planets: [],
             vehicles: [],
-            planet_names: [],
-            vehicle_names:[],
+            vehiclesAndPlanetsSelected: [],
             time_taken: 0,
             showConfirmationDialog: false,
             isLoading: false,
@@ -71,6 +70,29 @@ export default class Home extends React.Component {
         }, () => this.updateVehicles());
     }
 
+    handlePlanetSelection = (planet, id) => {
+        const updatedVehiclesAndPlanetsSelected = [ ...this.state.vehiclesAndPlanetsSelected ];
+        const index = updatedVehiclesAndPlanetsSelected.findIndex(selectionEntry => selectionEntry.id === id);
+        if (index !== -1) {
+            updatedVehiclesAndPlanetsSelected[index].planet = planet;
+        } else {
+            const entry = {
+                id,
+                planet,
+                vehicle: null
+            };
+            updatedVehiclesAndPlanetsSelected.push(entry);
+        }
+        this.setState({ vehiclesAndPlanetsSelected: updatedVehiclesAndPlanetsSelected }, () => console.log(this.state.vehiclesAndPlanetsSelected));
+    }
+
+    handleVehicleSelection = (vehicle, id) => {
+        const updatedVehiclesAndPlanetsSelected = [ ...this.state.vehiclesAndPlanetsSelected ];
+        const index = updatedVehiclesAndPlanetsSelected.findIndex(selectionEntry => selectionEntry.id === id);
+        updatedVehiclesAndPlanetsSelected[index].vehicle = vehicle;
+        this.setState({ vehiclesAndPlanetsSelected: updatedVehiclesAndPlanetsSelected }, () => console.log(this.state.vehiclesAndPlanetsSelected));
+    }
+
     renderDropdowns = () => {
         const {vehicles, planets} = this.state;
         return [1,2,3,4].map(id => 
@@ -79,7 +101,9 @@ export default class Home extends React.Component {
                 id={id}
                 vehicles={vehicles}
                 planets={planets}
-                onDestinationAndVehicleSelection={this.handleDestinationAndVehicleSelection}
+                onPlanetSelection={this.handlePlanetSelection}
+                onVehicleSelection={this.handleVehicleSelection}
+                // onDestinationAndVehicleSelection={this.handleDestinationAndVehicleSelection}
             />
         );
     }
@@ -112,7 +136,7 @@ export default class Home extends React.Component {
     }
 
     render() {
-        const {planet_names, time_taken, isLoading } = this.state;
+        const {vehiclesAndPlanetsSelected, time_taken, isLoading } = this.state;
         return(
             <div>
                 <div className="menu-container">
@@ -124,7 +148,7 @@ export default class Home extends React.Component {
                         onClick={() => this.findFalcone()}
                         variant="contained" 
                         color="primary"
-                        disabled={planet_names.length < 4}>
+                        disabled={vehiclesAndPlanetsSelected.length < 4}>
                             Find Falcone
                         </Button> :
                         <CircularProgress />

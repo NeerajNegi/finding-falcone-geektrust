@@ -7,7 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import { useState } from 'react';
 
-const VehicleRadioGroup = ({ vehicles, maxDistance, onVehicleUpdate }) => {
+const VehicleRadioGroup = ({ vehicles, maxDistance, onVehicleChange }) => {
 
     const [selectedVehicle, setSelectedVehicle] = useState('');
 
@@ -24,7 +24,8 @@ const VehicleRadioGroup = ({ vehicles, maxDistance, onVehicleUpdate }) => {
     const selectVehicle = (vehicleName) => {
         setSelectedVehicle(vehicleName);
         const vehicle = vehicles.filter(veh => veh.name === vehicleName);
-        onVehicleUpdate(...vehicle);
+        // onVehicleUpdate(...vehicle);
+        onVehicleChange(...vehicle);
     }
 
     return (
