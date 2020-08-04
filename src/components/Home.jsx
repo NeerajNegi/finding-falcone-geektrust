@@ -70,27 +70,45 @@ export default class Home extends React.Component {
         }, () => this.updateVehicles());
     }
 
+    updateTimeTaken = () => {
+        const time_taken = this.state.vehiclesAndPlanetsSelected.reduce((total, selectedEntry) => selectedEntry.time_taken + total, 0);
+        this.setState({ time_taken });
+    }
+
     handlePlanetSelection = (planet, id) => {
         const updatedVehiclesAndPlanetsSelected = [ ...this.state.vehiclesAndPlanetsSelected ];
         const index = updatedVehiclesAndPlanetsSelected.findIndex(selectionEntry => selectionEntry.id === id);
         if (index !== -1) {
             updatedVehiclesAndPlanetsSelected[index].planet = planet;
+            const vehicle = updatedVehiclesAndPlanetsSelected[index].vehicle
+            if (vehicle) {
+                updatedVehiclesAndPlanetsSelected[index].time_taken = planet.distance / vehicle.speed;
+            }
         } else {
             const entry = {
                 id,
                 planet,
-                vehicle: null
+                vehicle: null,
+                time_taken: 0
             };
             updatedVehiclesAndPlanetsSelected.push(entry);
         }
-        this.setState({ vehiclesAndPlanetsSelected: updatedVehiclesAndPlanetsSelected }, () => console.log(this.state.vehiclesAndPlanetsSelected));
+        this.setState({ vehiclesAndPlanetsSelected: updatedVehiclesAndPlanetsSelected }, () => {
+            console.log(this.state.vehiclesAndPlanetsSelected);
+            this.updateTimeTaken();
+        });
     }
 
     handleVehicleSelection = (vehicle, id) => {
         const updatedVehiclesAndPlanetsSelected = [ ...this.state.vehiclesAndPlanetsSelected ];
         const index = updatedVehiclesAndPlanetsSelected.findIndex(selectionEntry => selectionEntry.id === id);
         updatedVehiclesAndPlanetsSelected[index].vehicle = vehicle;
-        this.setState({ vehiclesAndPlanetsSelected: updatedVehiclesAndPlanetsSelected }, () => console.log(this.state.vehiclesAndPlanetsSelected));
+        const planet = updatedVehiclesAndPlanetsSelected[index].planet;
+        updatedVehiclesAndPlanetsSelected[index].time_taken = planet.distance / vehicle.speed;
+        this.setState({ vehiclesAndPlanetsSelected: updatedVehiclesAndPlanetsSelected }, () => {
+            console.log(this.state.vehiclesAndPlanetsSelected);
+            this.updateTimeTaken();
+        });
     }
 
     renderDropdowns = () => {
